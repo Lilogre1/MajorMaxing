@@ -5,7 +5,7 @@ import { useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import Dropdown from "@/components/Dropdown";
 
-const suggestions = ["Computer Science", "Mathematics", "Data Science"];
+const suggestions = ["Computer Science", "Math", "Data Science", "Statistics", "Information Science"];
 const dropdownOptions = ["MATH 221 - AP Calc AB", "MATH 222 - AP Calc BC"];
 
 export default function Home() {
@@ -15,7 +15,8 @@ export default function Home() {
   const router = useRouter();
 
   const handleSearch = () => {
-    router.push(`/generate?major1=${encodeURIComponent(major1)}&major2=${encodeURIComponent(major2)}&math=${encodeURIComponent(selectedOption)}`);
+    console.log(major1, major2, selectedOption);
+    router.push(`/generate?major1=${encodeURIComponent(major1)}&major2=${encodeURIComponent(major2)}`);//&math=${encodeURIComponent(selectedOption)}`);
   };
 
   const handleSuggestionClick1 = (suggestion: string) => {

@@ -5,11 +5,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     try {
       const { major1, major2, math } = req.body;
-      const pythonProcess = spawn('python', ['./scripts/select_course.py',(major1), (major2), (math)]);
+      const pythonProcess = spawn('python', ['./scripts/puttingshitin.py', major1, major2]);
+
+      let responseData = '';
 
       pythonProcess.stdout.on('data', (data) => {
-        const result = JSON.parse(data.toString());
-        res.status(200).json({ nextChoices: result });
+        responseData += data.toString();
       });
 
       pythonProcess.stderr.on('data', (data) => {
@@ -19,6 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       pythonProcess.on('close', (code) => {
         console.log(`child process exited with code ${code}`);
+        res.status(200).json(JSON.parse(responseData));
       });
     } catch (error) {
       res.status(500).json({ error: 'Failed to select course' });
