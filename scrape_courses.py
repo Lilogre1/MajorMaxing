@@ -169,7 +169,7 @@ if __name__ == '__main__':
 
     # Proceed with the scraping and processing
     course_lists = [set(scrape_courses(url)) for url in [url1, url2]]
-    common_courses = set.union(*course_lists)
+    common_courses = set.intersection(*course_lists)
 
     detailed_courses = {}
     for url in detailed_course_urls:

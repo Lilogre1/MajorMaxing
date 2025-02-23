@@ -4,10 +4,10 @@ import json
 
 def main(major_one, major_two):
     # Call scrape_courses.py with arguments
-    subprocess.run(["python", "./scripts/scrape_courses.py", major_one, major_two])
+    subprocess.run(["python", "./scrape_courses.py", major_one, major_two])
 
     # Call jsonprint.py and capture its output
-    subprocess.run(["python", "./scripts/jsonprint.py"])
+    subprocess.run(["python", "./jsonprint.py"])
 
     # Print the response data
     print(json.dumps({"response": "Majors have been processed"}))

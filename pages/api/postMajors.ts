@@ -5,7 +5,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     try {
       const { major1, major2, math } = req.body;
-      const pythonProcess = spawn('python', ['./scripts/puttingshitin.py', major1, major2]);
+      const pythonProcess = spawn('python', ['./puttingshitin.py', major1, major2]);
 
       let responseData = '';
 

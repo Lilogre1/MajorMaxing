@@ -3,7 +3,7 @@ import { spawn } from 'child_process';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
-    const pythonProcess = spawn('python', ['./scripts/get_courses.py']);
+    const pythonProcess = spawn('python', ['./get_courses.py']);
 
     let responseData = '';
 

@@ -5,7 +5,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     try {
       const { course } = req.body;
-      const pythonProcess = spawn('python', ['./scripts/poppingshitoff.py', JSON.stringify(course)]);
+      const pythonProcess = spawn('python', ['./poppingshitoff.py', JSON.stringify(course)]);
 
       pythonProcess.stdout.on('data', (data) => {
         const result = JSON.parse(data.toString());
@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } else if (req.method === 'GET') {
     try {
-      const pythonProcess = spawn('python', ['./scripts/poppingshitoff.py']);
+      const pythonProcess = spawn('python', ['./poppingshitoff.py']);
 
       pythonProcess.stdout.on('data', (data) => {
         const result = JSON.parse(data.toString());

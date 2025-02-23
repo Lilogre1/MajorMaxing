@@ -15,7 +15,7 @@ def pop_and_output_top_two_courses(file_path):
                 print("Error: 'cross_listed_courses' is not a list.")
                 return
 
-            if not courses or len(courses) < 60:  # Check if the list is empty
+            if not courses:  # Check if the list is empty
                 print([])
                 return
 

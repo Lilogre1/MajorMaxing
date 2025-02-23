@@ -3,7 +3,7 @@ import { spawn } from 'child_process';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
-    const pythonProcess = spawn('python', ['./scripts/script.py']);
+    const pythonProcess = spawn('python', ['./script.py']);
 
     pythonProcess.stdout.on('data', (data) => {
       const result = JSON.parse(data.toString());
