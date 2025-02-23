@@ -5,22 +5,23 @@ for major in sys.argv[1:3]:
     if major.upper() not in ["COMP SCI", "DATA SCI", "L I S", "STAT", "MATH"]:
         sys.exit(f"ERROR: DID NOT FIND MATCH FOR {major} IN KNOWN DATABASE")
         
+
+
+for major in sys.argv[1:3]:
+    if major.upper() not in ["COMP SCI", "DATA SCI", "L I S", "STAT", "MATH"]:
+        sys.exit(f"ERROR: DID NOT FIND MATCH FOR {major} IN KNOWN DATABASE")
+        
+
 #CLASSES TO ORGANIZE COURSE/CATEGORIES for MAJORS:
-#class Course:
-#    def __init__(self, dpt, num, prqs): 
-#        self.name = (dpt, num)
-#        self.prqs = prqs
-#        
-#    def __str__(self):
-#        return f"{self.name[0].upper()}:{self.name[1]} ({len(self.prqs)} prereqs)"
-#    def __repr__(self):
-#        return f"{self.name[0].upper()}:{self.name[1]} ({len(self.prqs)} prereqs)"
-#
-#    def __str__(self):
-#        return str([f"{str(c)}" for c in self.courses])
-#        
-#    def __repr__(self):
-#        return str([f"{str(c)}" for c in self.courses])
+class Course:
+    def __init__(self, dpt, num, prqs): 
+        self.name = (dpt, num)
+        self.prqs = prqs
+        
+    def __str__(self):
+        return f"{self.name[0].upper()}:{self.name[1]} ({len(self.prqs)} prereqs)"
+    def __repr__(self):
+        return f"{self.name[0].upper()}:{self.name[1]} ({len(self.prqs)} prereqs)"
 
 class Category:
     def __init__(self, maj, name, num):
@@ -34,9 +35,10 @@ class Category:
         return len(self.edges) < len(other.edges)
         
     def __str__(self):
-        return f"{self.major.upper()}: {self.num} classes from {self.name}"
+        return f"{self.name} - N:{self.num}, C:{self.courses}, D:{len(self.edges)}"
+        
     def __repr__(self):
-        return f"{self.major.upper()}: {self.num} classes from {self.name}"
+        return f"{self.name} - N:{self.num}, C:{self.courses}, D:{len(self.edges)}"
 
 Courses = dict() #Keys are course names, values are sets of edges
 Categories = dict() #Keys are category names, vals are category objects
@@ -110,15 +112,15 @@ for catName in Categories:
             best = min(options)
             popCourse(course, best[0], best[1])
         while len(cat.courses) != 0:
-            output.append( cat.courses.pop() )
+            course = cat.courses.pop()
+            output.append(f"{course[0]} {course[1]}")
             cat.num-=1
         assert(len(cat.courses) == len(cat.edges) == 0)
-
 nodeList = [Categories[key] for key in Categories]
-heapq.heapify(nodeList)
 query = []
 
-def update(nodeList):
+def update(nodeList, Courses):
+    nodeList.sort(key = lambda a: a.num)
     l = 0
     maxLen = len(nodeList)
     for i in range(maxLen):
@@ -126,8 +128,16 @@ def update(nodeList):
             Categories.pop(nodeList[i].name)
             l = i + 1
     if l == maxLen:
-        print(output)
+        return []
     else:
+        nodeList = nodeList[l:]
+        for c in Courses:
+            for e in Courses[c]:
+                gone = set()
+                if e[0] not in Categories or e[1] not in Categories:
+                    gone.add(e)
+            for e in gone:
+                Courses[c].discard(e)
         return nodeList[l:]
 
 def bestTarget(cat1):
@@ -138,8 +148,8 @@ def bestTarget(cat1):
                 targets[e[1]] = course
             elif e[1] == cat1.name:
                 targets[e[0]] = course
-    keys = targets.keys()
-    keys.sort(by = lambda e: Categories[e])
+    keys = list(targets.keys())
+    keys.sort(key = lambda e: Categories[e])
     return (targets[keys[0]], cat1, keys[0])
 
 def store():
@@ -148,14 +158,17 @@ def store():
     pass
 
 while len(nodeList) != 0:
-    nodeList = update(nodeList)
-    print(len(nodeList) )
+    nodeList = update(nodeList, Courses)
+    if len(nodeList) == 0:
+        store()
+        print([])
+        break
     minNodes = []
     minDegree = len(nodeList[0].edges)
     if minDegree == 0: #
         select = nodeList[0].num
         query = [f"{c[0].upper(), c[1]}" for c in nodeList[0].courses]
-        print(0, select, nodeList[0].courses)
+        print(query)
         store()
         break
     else:
@@ -177,3 +190,4 @@ while len(nodeList) != 0:
                     stringSet.add(s)
             store()
             print(query)
+            break
