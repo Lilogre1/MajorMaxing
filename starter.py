@@ -6,12 +6,6 @@ for major in sys.argv[1:3]:
         sys.exit(f"ERROR: DID NOT FIND MATCH FOR {major} IN KNOWN DATABASE")
         
 
-
-for major in sys.argv[1:3]:
-    if major.upper() not in ["COMP SCI", "DATA SCI", "L I S", "STAT", "MATH"]:
-        sys.exit(f"ERROR: DID NOT FIND MATCH FOR {major} IN KNOWN DATABASE")
-        
-
 #CLASSES TO ORGANIZE COURSE/CATEGORIES for MAJORS:
 class Course:
     def __init__(self, dpt, num, prqs): 
@@ -47,7 +41,7 @@ Categories = dict() #Keys are category names, vals are category objects
 
 
 #ITERATE THROUGH RORY's FILES
-NAMES = [argv[1].upper(), argv[2].upper()] #["COMP SCI", "DATA SCI", "L I S", "STAT", "MATH"]
+NAMES = argv[1:3] #["COMP SCI", "DATA SCI", "L I S", "STAT", "MATH"]
 
 for FILENAME in NAMES:
     with open(f"{FILENAME}.txt") as f:
@@ -83,7 +77,7 @@ def courseStr(dpt, num):
     return f"{dpt} {num}"
 
 def popCourse(course, cat1=None, cat2=None):
-    output.append(f"{course[0].upper()} {course[1]}")
+    output.append(f"{course[0]} {course[1]}")
     Categories[cat1].courses.discard(course)
     Categories[cat1].num-=1
     Categories[cat1].edges.discard(course)
@@ -115,7 +109,7 @@ for catName in Categories:
             course = cat.courses.pop()
             output.append(f"{course[0]} {course[1]}")
             cat.num-=1
-        assert(len(cat.courses) == len(cat.edges) == 0)
+        
 nodeList = [Categories[key] for key in Categories]
 query = []
 
@@ -132,8 +126,9 @@ def update(nodeList, Courses):
     else:
         nodeList = nodeList[l:]
         for c in Courses:
+            gone = set()
             for e in Courses[c]:
-                gone = set()
+                
                 if e[0] not in Categories or e[1] not in Categories:
                     gone.add(e)
             for e in gone:
@@ -150,44 +145,21 @@ def bestTarget(cat1):
                 targets[e[0]] = course
     keys = list(targets.keys())
     keys.sort(key = lambda e: Categories[e])
-    return (targets[keys[0]], cat1, keys[0])
-
-def store():
-    f = open("MEM.txt", "w")
-    f.write(f"{output}\n{nodeList}\n{Courses}\n{Categories}\n")
-    pass
+    return (targets[keys[0]], cat1.name, keys[0])
 
 while len(nodeList) != 0:
     nodeList = update(nodeList, Courses)
     if len(nodeList) == 0:
-        store()
-        print([])
+        print(output)
         break
-    minNodes = []
-    minDegree = len(nodeList[0].edges)
-    if minDegree == 0: #
-        select = nodeList[0].num
-        query = [f"{c[0].upper(), c[1]}" for c in nodeList[0].courses]
-        print(query)
-        store()
-        break
+    nodeList.sort()
+    minNode = nodeList[0]
+    minDegree = len(minNode.edges)
+    if minDegree == 0:
+        while len(minNode.num) != 0:
+            course = minNode.courses.pop()
+            output.append(f"{course[0]} {course[1]}")
+            cat.num-=1
     else:
-        for n in nodeList:
-            if len(n.edges) == minDegree:
-                minNodes.append(n)
-            else:
-                break
-        if len(minNodes) == 1:
-            cat1 = minNodes[0]
-            popCourse(bestTarget(cat1))
-        else:
-            stringSet = set()
-            for n in minNodes:
-                for c in n.edges:
-                    s = f"{c[0].upper()} {c[1]}"
-                    if s not in stringSet:
-                        query.append(s)
-                    stringSet.add(s)
-            store()
-            print(query)
-            break
+        x,y,z = bestTarget(minNode)
+        popCourse(x,y,z)
