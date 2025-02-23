@@ -5,14 +5,15 @@ def get_courses():
     # Simulate fetching data
     data = {
         "courses1": [
-            {"id": "1", "category": "Category 1", "courses": [{"id": "1", "courseCode": "CS101", "courseName": "Intro to Computer Science"}]},
-            {"id": "2", "category": "Category 2", "courses": [{"id": "2", "courseCode": "CS102", "courseName": "Data Structures"}]}
+            {"id": "1", "category": "Core CS", "courses": [{"id": "1", "courseCode": "CSe00", "courseName": "Programming III"}]},
+            {"id": "2", "category": "Basic Calculus", "courses": [{"id": "2", "courseCode": "CS400", "courseName": "Data Structures"}]}
         ],
         "courses2": [
-            {"id": "3", "category": "Category 3", "courses": [{"id": "3", "courseCode": "CS201", "courseName": "Algorithms"}]},
-            {"id": "4", "category": "Category 4", "courses": [{"id": "4", "courseCode": "CS202", "courseName": "Operating Systems"}]}
+            {"id": "3", "category": "Core DS", "courses": [{"id": "3", "courseCode": "STAT 240", "courseName": "Data Science Modelling I"}]},
+            {"id": "4", "category": "Probability/Statistics", "courses": [{"id": "4", "courseCode": "STAT 309", "courseName": "Intro to Probability"}]}
         ]
     }
+    
     print(json.dumps(data))
 
 if __name__ == "__main__":
